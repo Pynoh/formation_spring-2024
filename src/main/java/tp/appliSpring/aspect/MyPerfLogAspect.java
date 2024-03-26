@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 
 @Profile("perf")
+@Component
+@Aspect
 public class MyPerfLogAspect {
 
 	@Pointcut("execution(* tp.appliSpring.exemple.*.*(..))")
