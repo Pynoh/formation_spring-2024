@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import tp.appliSpring.core.entity.Compte;
 
-//@Repository //@Component de type DAO/Repository
+@Repository //@Component de type DAO/Repository
 @Qualifier("jdbc")
 public class DaoCompteJdbc /*extends JdbcDaoSupport*/ implements DaoCompte {
 	
@@ -28,7 +28,7 @@ public class DaoCompteJdbc /*extends JdbcDaoSupport*/ implements DaoCompte {
 	private final String FETCH_BY_NUM_SQL = "select * from compte where numero=:numero";
 	private final String DELETE_BY_NUM_SQL = "delete from compte where numero=:numero";
 	
-	//@Autowired
+	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Override
@@ -65,14 +65,18 @@ public class DaoCompteJdbc /*extends JdbcDaoSupport*/ implements DaoCompte {
 		SqlParameterSource parameters = new MapSqlParameterSource()
 		.addValue("label", compte.getLabel())
 		.addValue("solde", compte.getSolde());
-		namedParameterJdbcTemplate.update(INSERT_SQL, parameters, holder);; //pour h2
+		namedParameterJdbcTemplate.update(INSERT_SQL, parameters, holder); //pour h2
 		//namedParameterJdbcTemplate.update(INSERT_SQL, parameters, holder,  new String[] { "numero" }); //pour postgres
 		compte.setNumero(holder.getKey().longValue());//store auto_increment pk in instance to return
 		return compte;
 	}
 	
 	public Compte update(Compte compte) {
-		//A CODER/COMPLETER  EN TP
+		SqlParameterSource parameters = new MapSqlParameterSource()
+				.addValue("numero", compte.getNumero())
+				.addValue("label", compte.getLabel())
+				.addValue("solde", compte.getSolde());
+		namedParameterJdbcTemplate.update(UPDATE_SQL, parameters);
 		return compte;
 	}
 
@@ -84,7 +88,9 @@ public class DaoCompteJdbc /*extends JdbcDaoSupport*/ implements DaoCompte {
 
 	@Override
 	public void deleteById(Long numCpt) {
-		//A CODER/COMPLETER  EN TP
+		SqlParameterSource parameters = new MapSqlParameterSource()
+				.addValue("numero", numCpt);
+		namedParameterJdbcTemplate.update(DELETE_BY_NUM_SQL, parameters);
 	}
 
 }
