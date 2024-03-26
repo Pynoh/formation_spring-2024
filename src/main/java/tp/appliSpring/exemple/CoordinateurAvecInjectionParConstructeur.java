@@ -22,6 +22,6 @@ public class CoordinateurAvecInjectionParConstructeur {
     public void calculerEtAfficher() {
         double x = 4;
         double res = monCalculateur.calculer(x); //x*x ou bien 2*x ou bien ...
-        monAfficheur.afficher("resAvecInjectionparConstructeur = " + res);// >> res=16 en v1 ou bien ** res=16
+        monAfficheur.afficherMaj("resAvecInjectionparConstructeur = " + res);// >> res=16 en v1 ou bien ** res=16
     }
 }
