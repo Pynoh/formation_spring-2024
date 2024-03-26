@@ -18,19 +18,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
 
-//@Configuration
+@Configuration
 @EnableTransactionManagement() // "transactionManager" (not "txManager") is expected !!!
 @ComponentScan(basePackages = { "tp.appliSpring.core.dao" ,  "tp.appliSpring.core.service" ,  "tp.appliSpring.core.init"})
 public class DomainAndPersistenceConfig {
-	
+
 	@Value("${typebase}")
 	private String typeBase = "H2";
-	
+
 	@Value("${spring.jpa.action}")
 	private String actionJpa = "none"; // ou bien "drop-and-create"
 
 	// JpaVendorAdapter (Hibernate ou OpenJPA ou ...)
-	//@Bean
+	@Bean
 	public JpaVendorAdapter jpaVendorAdapter() {
 		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
 		hibernateJpaVendorAdapter.setShowSql(false);
@@ -44,26 +44,26 @@ public class DomainAndPersistenceConfig {
 	}
 
 	// EntityManagerFactory
-	//@Bean(name = { "entityManagerFactory" })
+	@Bean(name = { "entityManagerFactory" })
 	public EntityManagerFactory entityManagerFactory(JpaVendorAdapter jpaVendorAdapter, DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(jpaVendorAdapter);
 		factory.setPackagesToScan("tp.appliSpring.core.entity");
 		factory.setDataSource(dataSource);
 		Properties jpaProperties = new Properties(); // java.util
-		jpaProperties.setProperty("javax.persistence.schema-generation.database.action", actionJpa); //JPA>=2.1
+		jpaProperties.setProperty("jakarta.persistence.schema-generation.database.action", actionJpa); //JPA>=2.1
 		factory.setJpaProperties(jpaProperties);
 		factory.afterPropertiesSet();
 		return factory.getObject();
-	} 
-	
-	
+	}
+
+
 	// Transaction Manager for JPA or ...
-	//@Bean(name = "transactionManager") 
+	@Bean(name = "transactionManager")
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(entityManagerFactory);
 		return txManager;
 	}
-  
+
 }
